@@ -27,6 +27,6 @@ docker exec -it 'container ID' /bin/bash
 Then go to 'http://localhost:5000'
 
 ```
-#clean and delete
-./delete.sh
+#clean docker
+./clean.sh
 ```
