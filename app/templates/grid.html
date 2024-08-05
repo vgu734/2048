@@ -18,6 +18,46 @@
     </style>
 </head>
 <body>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            let key = event.key;
+            if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight') {
+                fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key: key })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response error' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Updating table:', data);
+                    updateTable(data.grid_data);
+                })
+                .catch((error) => console.error('Error:', error));
+            }
+        });
+
+        function updateTable(gridData) {
+            const table = document.querySelector('table');
+            table.innerHTML = '';
+
+            for (let row of gridData) {
+                let tr = document.createElement('tr');
+                for (let item of row) {
+                    let td = document.createElement('td');
+                    td.textContent = item;
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+        }
+    </script>
     <table>
         {% for row in grid_data %}
             <tr>
