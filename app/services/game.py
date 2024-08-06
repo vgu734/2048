@@ -1,7 +1,8 @@
 import random
 
 class Game:
-    size = 5
+    size = 4
+    p_four = .8
     
     def __init__(self, score=0):
         self.tiles = self.initTiles()
@@ -13,7 +14,7 @@ class Game:
             for j in range(self.size):
                 tiles.append(Tile(index=(i, j)))
                 
-        random.choice(tiles).value = 2 if random.random() < .8 else 4
+        random.choice(tiles).value = 2 if random.random() < self.p_four else 4
         return tiles
     
     def moveLeft(self):
@@ -87,22 +88,3 @@ class Tile:
         
     def __repr__(self):
         return f"Tile(index={self.index}, value={self.value})"
-    
-color_mapping = {
-    2: '#eee4da',
-    4: '#ede0c8',
-    8: '#f2b179',
-    16: '#f59563',
-    32: '#f67c5f',
-    64: '#f65e3b',
-    128: '#edcf72',
-    256: '#edcc61',
-    512: '#edc850',
-    1024: '#edc53f',
-    2048: '#edc22e',
-    4096: '#3c3a32',
-    8192: '#3c3a32',
-    16384: '#3c3a32',
-    32768: '#3c3a32',
-    65536: '#3c3a32',
-}

@@ -4,7 +4,7 @@ def render_board_state(game):
     for i in range(game.size):
         row = []
         for j in range(game.size):
-            row.append(game.tiles[i*5 + j].value)
+            row.append(game.tiles[i*game.size + j].value)
         board_state.append(row)
         
     return board_state
