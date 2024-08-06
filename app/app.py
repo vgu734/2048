@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from services.game import Game, Tile
+from services.game import Game, Tile, color_mapping
 from services.utils import render_board_state, get_empty_tiles
 
 import random
@@ -27,10 +27,11 @@ def main():
         else:
             print('hi')
             
-        return jsonify(grid_data=render_board_state(game))
+        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping)
     
-    return render_template('grid.html', grid_data=render_board_state(game))
+    return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping)
 
 if __name__ == '__main__':
     game = Game()
     app.run(debug=True, host='0.0.0.0')
+    

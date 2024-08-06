@@ -3,19 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5x5 Grid</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 50%;
-            margin: auto;
-        }
-        td {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
+    <title>2048</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <script>
@@ -37,13 +26,13 @@
                 })
                 .then(data => {
                     console.log('Updating table:', data);
-                    updateTable(data.grid_data);
+                    updateTable(data.grid_data, data.color_mapping);
                 })
                 .catch((error) => console.error('Error:', error));
             }
         });
 
-        function updateTable(gridData) {
+        function updateTable(gridData, colorMapping) {
             const table = document.querySelector('table');
             table.innerHTML = '';
 
@@ -52,6 +41,7 @@
                 for (let item of row) {
                     let td = document.createElement('td');
                     td.textContent = item;
+                    td.style.backgroundColor = colorMapping[item];
                     tr.appendChild(td);
                 }
                 table.appendChild(tr);
@@ -62,7 +52,7 @@
         {% for row in grid_data %}
             <tr>
                 {% for item in row %}
-                    <td>{{ item }}</td>
+                    <td style="background-color: {{ color_mapping[item] }};">{{ item }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}

@@ -87,3 +87,22 @@ class Tile:
         
     def __repr__(self):
         return f"Tile(index={self.index}, value={self.value})"
+    
+color_mapping = {
+    2: '#eee4da',
+    4: '#ede0c8',
+    8: '#f2b179',
+    16: '#f59563',
+    32: '#f67c5f',
+    64: '#f65e3b',
+    128: '#edcf72',
+    256: '#edcc61',
+    512: '#edc850',
+    1024: '#edc53f',
+    2048: '#edc22e',
+    4096: '#3c3a32',
+    8192: '#3c3a32',
+    16384: '#3c3a32',
+    32768: '#3c3a32',
+    65536: '#3c3a32',
+}
