@@ -1,6 +1,12 @@
 import matplotlib.colors as mcolors
 
 def generate_color_mapping(size):
+    '''
+    Generate color_mapping which maps a number (e.g. '2') to a color-hex. This mapping will be passed
+    into the CSS file as tile background colors dependent on the tile value.
+    
+    Returns: Map, int -> color-hex
+    '''
     base_colors = [
         '#eee4da', '#ede0c8', '#f2b179', '#f59563', '#f67c5f',
         '#f65e3b', '#edcf72', '#edcc61', '#edc850', '#edc53f',

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from services.game import Game, Tile
-from services.utils import render_board_state, get_empty_tiles
+from services.utils import render_board_state, get_empty_tiles, is_game_over
 from services.colors import generate_color_mapping
 
 import random
@@ -12,6 +12,10 @@ def main():
     global game
     color_mapping = generate_color_mapping(game.size)
     
+    if is_game_over(game):
+        print("game over")
+    else:
+        print("game continues")
     if request.method == 'POST':  
         data = request.json
         
@@ -25,9 +29,7 @@ def main():
             game.moveRight()
         
         if len(get_empty_tiles(game.tiles)) != 0:
-            random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_four else 4
-        else:
-            print('hi')
+            random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4
             
         return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping)
     
