@@ -9,7 +9,7 @@ class Game:
     p_two: probability of randomly generating a two
     score: Player score
     '''
-    size = 2
+    size = 5
     p_two = .85
     
     def __init__(self, score=0):

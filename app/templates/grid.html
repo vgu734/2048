@@ -5,9 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2048</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+    </style>
 </head>
 <body>
+    <div id="game-over-overlay" class="overlay">
+        GAME OVER
+    </div>
+
+    <table>
+        {% for row in grid_data %}
+            <tr>
+                {% for item in row %}
+                    <td style="background-color: {{ color_mapping[item] }};">{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
     <script>
+        function updateGameOverOverlay(isGameOver) {
+            const overlay = document.getElementById('game-over-overlay');
+            if (isGameOver) {
+                overlay.classList.add('show');
+            } else {
+                overlay.classList.remove('show');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameOver = {{ game_over | tojson }};
+            updateGameOverOverlay(gameOver);
+        });
+
         document.addEventListener('keydown', function(event) {
             let key = event.key;
             if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight') {
@@ -25,8 +55,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Updating table:', data);
                     updateTable(data.grid_data, data.color_mapping);
+                    updateGameOverOverlay(data.game_over);
                 })
                 .catch((error) => console.error('Error:', error));
             }
@@ -48,14 +78,5 @@
             }
         }
     </script>
-    <table>
-        {% for row in grid_data %}
-            <tr>
-                {% for item in row %}
-                    <td style="background-color: {{ color_mapping[item] }};">{{ item }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
 </body>
 </html>

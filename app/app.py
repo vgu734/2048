@@ -7,35 +7,32 @@ import random
 
 app = Flask(__name__)
 
+game = Game()
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     global game
     color_mapping = generate_color_mapping(game.size)
     
-    if is_game_over(game):
-        print("game over")
-    else:
-        print("game continues")
+    game_over = is_game_over(game)
+    
     if request.method == 'POST':  
         data = request.json
-        
-        if (data['key'] == 'ArrowUp'):
+        if data['key'] == 'ArrowUp':
             game.moveUp()
-        elif (data['key'] == 'ArrowLeft'):
+        elif data['key'] == 'ArrowLeft':
             game.moveLeft()
-        elif (data['key'] == 'ArrowDown'):
+        elif data['key'] == 'ArrowDown':
             game.moveDown()
-        elif (data['key'] == 'ArrowRight'):
+        elif data['key'] == 'ArrowRight':
             game.moveRight()
         
         if len(get_empty_tiles(game.tiles)) != 0:
             random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4
             
-        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping)
+        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over)
     
-    return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping)
+    return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over)
 
 if __name__ == '__main__':
-    game = Game()
     app.run(debug=True, host='0.0.0.0')
-    
