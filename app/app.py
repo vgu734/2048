@@ -26,6 +26,9 @@ def main():
             game.moveDown()
         elif data['key'] == 'ArrowRight':
             game.moveRight()
+        elif data['key'] == 'restart':
+            game = Game()
+            game_over = is_game_over(game)
         
         if len(get_empty_tiles(game.tiles)) != 0:
             random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4

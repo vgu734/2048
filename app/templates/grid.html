@@ -10,8 +10,11 @@
 </head>
 <body>
     <div id="game-over-overlay" class="overlay">
-        GAME OVER
-    </div>
+	    <div class="overlay-content">
+	        <div id="game-over-message" class="game-over-message">GAME OVER</div>
+	        <button id="restart-button" class="restart-button">Restart</button>
+	    </div>
+	</div>
 
     <table>
         {% for row in grid_data %}
@@ -77,6 +80,33 @@
                 table.appendChild(tr);
             }
         }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameOver = {{ game_over | tojson }};
+            updateGameOverOverlay(gameOver);
+
+            document.getElementById('restart-button').addEventListener('click', () => {
+                fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key: 'restart' })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response error' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateTable(data.grid_data, data.color_mapping);
+                    updateGameOverOverlay(data.game_over);
+                })
+                .catch((error) => console.error('Error:', error));
+            });
+        });
+
     </script>
 </body>
 </html>
