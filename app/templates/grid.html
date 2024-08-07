@@ -9,28 +9,29 @@
     </style>
 </head>
 <body>
-    <div id="game-over-overlay" class="overlay">
-	    <div class="overlay-content">
-	        <div id="game-over-message" class="game-over-message">GAME OVER</div>
-	        <button id="restart-button" class="restart-button">Restart</button>
-	    </div>
-	</div>
-	
-	<div id="board" class="board">
-		<div id="score" class="score"></div>
-		<button id="undo" class="undo"></button>
-	    <table>
-	        {% for row in grid_data %}
-	            <tr>
-	                {% for item in row %}
-	                    <td style="background-color: {{ color_mapping[item] }};" id="tile-value" class="tile-value">
-	                    	{{ item }}
-	                    </td>
-	                {% endfor %}
-	            </tr>
-	        {% endfor %}
-	    </table>
-	</div>
+<div id="container">
+    <div id="top-bar">
+        <div id="score" class="score">
+        	Score: 1234
+        </div>
+        <button id="undo" class="undo">
+        	Undo
+        </button>
+    </div>
+    <div id="board" class="board">
+        <table>
+            {% for row in grid_data %}
+                <tr>
+                    {% for item in row %}
+                        <td style="background-color: {{ color_mapping[item] }};" id="tile-value" class="tile-value">
+                            {{ item }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
     <script>
         function updateGameOverOverlay(isGameOver) {

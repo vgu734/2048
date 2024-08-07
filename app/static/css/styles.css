@@ -1,6 +1,14 @@
-html, body{
+body{
 	overflow: hidden;
 	background-color: #f0f0f0;
+	font-family: Arial, sans-serif;
+	font-size: 24px;
+	margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-rows: 1fr 5fr;
+    height: 100vh;
+    align-items: start;
 }
 table {
 	border-collapse: collapse;
@@ -15,21 +23,49 @@ td {
 	border: 2px solid #ccc;
 	padding: 20px;
 	text-align: center;
-	font-size: 24px;
 	transition: background-color 0.3s ease;
 	width: 20%;
 	height: 20%;
 }
 
+#container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
+#top-bar {
+    display: grid;
+    grid-template-columns: 50% 40%;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+#score {
+    height: 30px;
+    font-size: 28px;
+    align-content: center;
+    justify-self: end;
+}
+
+#undo {
+    width: 100px;
+    height: 30px;
+    font-size: 24px;
+    transition: background-color 0.3s ease;
+    justify-self: center;
+}
+
+#undo:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
 .board {
-	font-family: Arial, sans-serif;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
-	margin: 0;
-	
 	position: relative;
+	flex-grow: 1;
 }
 .overlay {
     display: none;
