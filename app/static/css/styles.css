@@ -33,7 +33,6 @@ td {
     grid-template-rows: auto 1fr;
     height: 100%;
 }
-
 #top-bar {
     display: grid;
     grid-template-columns: 50% 40%;
@@ -41,25 +40,30 @@ td {
     padding: 1rem;
     box-sizing: border-box;
 }
-
 #score {
     height: 30px;
-    font-size: 28px;
     align-content: center;
     justify-self: end;
 }
-
 #undo {
-    width: 100px;
-    height: 30px;
-    font-size: 24px;
-    transition: background-color 0.3s ease;
-    justify-self: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#undo img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+#undo:hover img {
+  transform: scale(1.15);
 }
 
-#undo:hover {
-    background-color: #0056b3; /* Darker color on hover */
-}
 .board {
 	display: flex;
 	justify-content: center;

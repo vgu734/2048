@@ -10,7 +10,7 @@ class Game:
     tiles: list of tiles
     score: Player score
     '''
-    size = 5
+    size = 2
     p_two = .85
     
     def __init__(self, score=0):
