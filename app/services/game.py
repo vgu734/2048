@@ -7,6 +7,7 @@ class Game:
     Attributes:
     size (int): The NxN size of the board
     p_two: probability of randomly generating a two
+    tiles: list of tiles
     score: Player score
     '''
     size = 5
@@ -100,7 +101,8 @@ class Game:
     
     def merge(self, values):
         '''
-        Simulate merge (e.g. during player move, merge tiles of same value along line of movement)
+        Simulate merge (e.g. during player move, merge tiles of same value along line of movement).
+        Also increases player score according to the summation of merged tile values.
         
         Parameters:
         values (list[int]): List, ordered by index, of tile values prior to merge
@@ -110,6 +112,7 @@ class Game:
         '''
         for i in range(len(values) - 1):
             if values[i] == values[i + 1] and values[i] != 0:
+                self.score += values[i]
                 values[i] *= 2
                 values[i + 1] = 0
         return values

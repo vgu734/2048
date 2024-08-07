@@ -15,16 +15,22 @@
 	        <button id="restart-button" class="restart-button">Restart</button>
 	    </div>
 	</div>
-
-    <table>
-        {% for row in grid_data %}
-            <tr>
-                {% for item in row %}
-                    <td style="background-color: {{ color_mapping[item] }};">{{ item }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+	
+	<div id="board" class="board">
+		<div id="score" class="score"></div>
+		<button id="undo" class="undo"></button>
+	    <table>
+	        {% for row in grid_data %}
+	            <tr>
+	                {% for item in row %}
+	                    <td style="background-color: {{ color_mapping[item] }};" id="tile-value" class="tile-value">
+	                    	{{ item }}
+	                    </td>
+	                {% endfor %}
+	            </tr>
+	        {% endfor %}
+	    </table>
+	</div>
 
     <script>
         function updateGameOverOverlay(isGameOver) {
