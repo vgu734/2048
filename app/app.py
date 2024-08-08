@@ -9,34 +9,55 @@ import copy
 app = Flask(__name__)
 
 game = Game()
+prev_game_state = copy.deepcopy(game)  # Initialize the previous game state
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
-    global game
+    global game, prev_game_state
     color_mapping = generate_color_mapping(game.size)
     
-    game_over = is_game_over(game)
-    original_tiles = copy.deepcopy(game.tiles)
-    
-    if request.method == 'POST':  
+    if request.method == 'POST':
         data = request.json
-        if data['key'] == 'ArrowUp':
-            game.moveUp()
-        elif data['key'] == 'ArrowLeft':
-            game.moveLeft()
-        elif data['key'] == 'ArrowDown':
-            game.moveDown()
-        elif data['key'] == 'ArrowRight':
-            game.moveRight()
-        elif data['key'] == 'restart':
-            game = Game()
+        
+        if data['key'] == 'undo':
+            game = copy.deepcopy(prev_game_state)
+            game_over = is_game_over(game)
+            return jsonify(
+                grid_data=render_board_state(game),
+                color_mapping=color_mapping,
+                game_over=game_over,
+                score=game.score
+            )
+        
+        if data['key'] in ['ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight']:
+            prev_game_state = copy.deepcopy(game)
+            if data['key'] == 'ArrowUp':
+                game.moveUp()
+            elif data['key'] == 'ArrowLeft':
+                game.moveLeft()
+            elif data['key'] == 'ArrowDown':
+                game.moveDown()
+            elif data['key'] == 'ArrowRight':
+                game.moveRight()
+
+            if len(get_empty_tiles(game.tiles)) != 0 and game.tiles != prev_game_state.tiles:
+                random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4
+
             game_over = is_game_over(game)
         
-        if len(get_empty_tiles(game.tiles)) != 0 and game.tiles != original_tiles:
-            random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4
-            
-        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over, score=game.score)
+        elif data['key'] == 'restart':
+            game = Game()
+            prev_game_state = copy.deepcopy(game)
+            game_over = is_game_over(game)
+        
+        return jsonify(
+            grid_data=render_board_state(game),
+            color_mapping=color_mapping,
+            game_over=game_over,
+            score=game.score
+        )
     
+    game_over = is_game_over(game)
     return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over, score=game.score)
 
 if __name__ == '__main__':

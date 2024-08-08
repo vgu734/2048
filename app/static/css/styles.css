@@ -59,25 +59,27 @@ td {
 }
 
 #undo {
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 #undo img {
-  width: 65px;
-  height: 65px;
-  object-fit: contain;
-  transition: transform 0.3s ease;
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 #undo:hover img {
-  transform: scale(1.15);
+    transform: scale(1.15);
 }
-
+#undo.no-move img {
+    transform: scale(1);
+}
 .board {
 	display: flex;
 	justify-content: center;

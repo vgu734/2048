@@ -9,39 +9,41 @@
     </style>
 </head>
 <body>
-	<div id="game-over-overlay" class="overlay">
-		<div class="overlay-content">
-			<div id="game-over-message" class="game-over-message">GAME OVER</div>
-			<button id="restart-button" class="restart-button">Restart</button>
-		</div>
-	</div>
-<div id="container">
-    <div id="top-bar">
-        <div id="score" class="score">
-		    <span class="label">Score</span>
-		    <span id="game-score" class="value"></span>
-		</div>
-        <div></div>
-        <button id="undo" class="undo">
-        	<img src="/static/undo.png" alt="Undo" />
-        </button>
+    <div id="game-over-overlay" class="overlay">
+        <div class="overlay-content">
+            <div id="game-over-message" class="game-over-message">GAME OVER</div>
+            <button id="restart-button" class="restart-button">Restart</button>
+        </div>
     </div>
-    <div id="board" class="board">
-        <table>
-            {% for row in grid_data %}
-                <tr>
-                    {% for item in row %}
-                        <td style="background-color: {{ color_mapping[item] }};" id="tile-value" class="tile-value">
-                            {{ item }}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+    <div id="container">
+        <div id="top-bar">
+            <div id="score" class="score">
+                <span class="label">Score</span>
+                <span id="game-score" class="value"></span>
+            </div>
+            <div></div>
+            <button id="undo" class="undo no-move">
+                <img id="undo-img" src="/static/undo-disabled.png" alt="Undo" />
+            </button>
+        </div>
+        <div id="board" class="board">
+            <table>
+                {% for row in grid_data %}
+                    <tr>
+                        {% for item in row %}
+                            <td style="background-color: {{ color_mapping[item] }};" id="tile-value" class="tile-value">
+                                {{ item }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-</div>
 
     <script>
+        let moveMade = false;
+
         function updateGameOverOverlay(isGameOver) {
             const overlay = document.getElementById('game-over-overlay');
             if (isGameOver) {
@@ -51,9 +53,21 @@
             }
         }
 
+        function updateUndoButton() {
+            const undoImg = document.getElementById('undo-img');
+            if (moveMade) {
+                undoImg.src = '/static/undo.png';  // Image for active undo button
+                document.getElementById('undo').classList.remove('no-move');
+            } else {
+                undoImg.src = '/static/undo-disabled.png';  // Image for inactive undo button
+                document.getElementById('undo').classList.add('no-move');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const gameOver = {{ game_over | tojson }};
             updateGameOverOverlay(gameOver);
+            updateUndoButton();  // Initialize button state
         });
 
         document.addEventListener('keydown', function(event) {
@@ -76,6 +90,8 @@
                     updateTable(data.grid_data, data.color_mapping);
                     updateScore(data.score);
                     updateGameOverOverlay(data.game_over);
+                    moveMade = true;  // Set moveMade to true after a successful move
+                    updateUndoButton();  // Update undo button image
                 })
                 .catch((error) => console.error('Error:', error));
             }
@@ -96,20 +112,17 @@
                 table.appendChild(tr);
             }
         }
-        
+
         function updateScore(score) {
-        	const scoreElement = document.getElementById('game-score');
-            
+            const scoreElement = document.getElementById('game-score');
+
             if (scoreElement) {
                 scoreElement.textContent = formatNumberWithCommas(score);
                 localStorage.setItem('gameScore', score);
             }
-		}
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const gameOver = {{ game_over | tojson }};
-            updateGameOverOverlay(gameOver);
+        }
 
+        document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('restart-button').addEventListener('click', () => {
                 fetch('/', {
                     method: 'POST',
@@ -126,7 +139,35 @@
                 })
                 .then(data => {
                     updateTable(data.grid_data, data.color_mapping);
+                    updateScore(data.score);
                     updateGameOverOverlay(data.game_over);
+                    moveMade = false;  // Reset moveMade flag on restart
+                    updateUndoButton();  // Update undo button image
+                })
+                .catch((error) => console.error('Error:', error));
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('undo').addEventListener('click', () => {
+                fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key: 'undo' })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response error' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateTable(data.grid_data, data.color_mapping);
+                    updateScore(data.score);
+                    moveMade = false;  // Reset moveMade flag after undo
+                    updateUndoButton();  // Update undo button image
                 })
                 .catch((error) => console.error('Error:', error));
             });
@@ -135,14 +176,13 @@
         function formatNumberWithCommas(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
-        
+
         window.onload = function() {
             const savedScore = localStorage.getItem('gameScore');
             if (savedScore !== null) {
                 updateScore(parseInt(savedScore, 10));
             }
         };
-        
     </script>
 </body>
 </html>
