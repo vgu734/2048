@@ -18,8 +18,9 @@
 <div id="container">
     <div id="top-bar">
         <div id="score" class="score">
-        	Score: 1234
-        </div>
+		    <span class="label">Score</span>
+		    <span id="game-score" class="value"></span>
+		</div>
         <div></div>
         <button id="undo" class="undo">
         	<img src="/static/undo.png" alt="Undo" />
@@ -73,6 +74,7 @@
                 })
                 .then(data => {
                     updateTable(data.grid_data, data.color_mapping);
+                    updateScore(data.score);
                     updateGameOverOverlay(data.game_over);
                 })
                 .catch((error) => console.error('Error:', error));
@@ -94,6 +96,15 @@
                 table.appendChild(tr);
             }
         }
+        
+        function updateScore(score) {
+        	const scoreElement = document.getElementById('game-score');
+            
+            if (scoreElement) {
+                scoreElement.textContent = formatNumberWithCommas(score);
+                localStorage.setItem('gameScore', score);
+            }
+		}
         
         document.addEventListener('DOMContentLoaded', () => {
             const gameOver = {{ game_over | tojson }};
@@ -121,6 +132,17 @@
             });
         });
 
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        window.onload = function() {
+            const savedScore = localStorage.getItem('gameScore');
+            if (savedScore !== null) {
+                updateScore(parseInt(savedScore, 10));
+            }
+        };
+        
     </script>
 </body>
 </html>

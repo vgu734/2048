@@ -35,9 +35,9 @@ def main():
         if len(get_empty_tiles(game.tiles)) != 0 and game.tiles != original_tiles:
             random.choice(get_empty_tiles(game.tiles)).value = 2 if random.random() < game.p_two else 4
             
-        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over)
+        return jsonify(grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over, score=game.score)
     
-    return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over)
+    return render_template('grid.html', grid_data=render_board_state(game), color_mapping=color_mapping, game_over=game_over, score=game.score)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

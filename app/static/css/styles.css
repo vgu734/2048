@@ -35,16 +35,29 @@ td {
 }
 #top-bar {
     display: grid;
-    grid-template-columns: 50% 20% 5%;
+    grid-template-columns: 50% 8% 0%;
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
 }
 #score {
-    height: 30px;
-    align-content: center;
-    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    justify-content: center;
+    width: 120px;
+    height: 65px;
+    background-color: #f39c12;
+    border-radius: 20%;
+    color: white;
+    text-align: center;
+    border: 3px solid black;
 }
+
+#score .value {
+    font-size: 16px;
+}
+
 #undo {
   background: none;
   border: none;
@@ -56,8 +69,8 @@ td {
   justify-content: center;
 }
 #undo img {
-  width: 30px;
-  height: 30px;
+  width: 65px;
+  height: 65px;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
