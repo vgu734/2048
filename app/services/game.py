@@ -10,7 +10,7 @@ class Game:
     tiles: list of tiles
     score: Player score
     '''
-    size = 2
+    size = 5
     p_two = .85
     
     def __init__(self, score=0):
@@ -143,3 +143,6 @@ class Tile:
         
     def __repr__(self):
         return f"Tile(index={self.index}, value={self.value})"
+    
+    def __eq__(self, other):
+        return self.index == other.index and self.value == other.value

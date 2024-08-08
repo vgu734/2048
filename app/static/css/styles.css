@@ -35,7 +35,7 @@ td {
 }
 #top-bar {
     display: grid;
-    grid-template-columns: 50% 40%;
+    grid-template-columns: 50% 20% 5%;
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
@@ -48,6 +48,7 @@ td {
 #undo {
   background: none;
   border: none;
+  outline: none;
   padding: 0;
   cursor: pointer;
   display: inline-flex;
