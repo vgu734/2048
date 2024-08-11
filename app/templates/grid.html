@@ -12,22 +12,25 @@
     <div id="game-over-overlay" class="overlay">
         <div class="overlay-content">
             <div id="game-over-message" class="game-over-message">GAME OVER</div>
-            <button id="restart-button" class="restart-button">Restart</button>
+            <button id="restart-button-overlay" class="restart-button-overlay">Restart</button>
         </div>
     </div>
     <div id="container">
-        <div id="top-bar">
-            <div id="score" class="score">
-                <span class="label">Score</span>
-                <span id="game-score" class="value"></span>
-            </div>
-            <div></div>
-            <button id="undo" class="undo no-move">
-                <img id="undo-img" src="/static/undo-disabled.png" alt="Undo" />
-            </button>
-        </div>
+        <header>
+		    <div id="app-header">
+		        <div class="title">2048</div>
+		        <div id="score" class="score">
+		            <span class="label">Score</span>
+		            <span id="game-score" class="value">0</span>
+		        </div>
+		    </div>
+		    <div id="table-header" class="table-header">
+		        <button id="restart-button" class="main-buttons">RESTART</button>
+		        <button id="undo" class="main-buttons">UNDO</button>
+		    </div>
+		</header>
         <div id="board" class="board">
-            <table>
+            <table id="table">
                 {% for row in grid_data %}
                     <tr>
                         {% for item in row %}
@@ -53,21 +56,10 @@
             }
         }
 
-        function updateUndoButton() {
-            const undoImg = document.getElementById('undo-img');
-            if (moveMade) {
-                undoImg.src = '/static/undo.png';  // Image for active undo button
-                document.getElementById('undo').classList.remove('no-move');
-            } else {
-                undoImg.src = '/static/undo-disabled.png';  // Image for inactive undo button
-                document.getElementById('undo').classList.add('no-move');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const gameOver = {{ game_over | tojson }};
             updateGameOverOverlay(gameOver);
-            updateUndoButton();  // Initialize button state
+            updateUndoButton();
         });
 
         document.addEventListener('keydown', function(event) {
@@ -90,8 +82,8 @@
                     updateTable(data.grid_data, data.color_mapping);
                     updateScore(data.score);
                     updateGameOverOverlay(data.game_over);
-                    moveMade = true;  // Set moveMade to true after a successful move
-                    updateUndoButton();  // Update undo button image
+                    moveMade = true;
+                    updateUndoButton();
                 })
                 .catch((error) => console.error('Error:', error));
             }
@@ -121,31 +113,39 @@
                 localStorage.setItem('gameScore', score);
             }
         }
-
+        
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('restart-button').addEventListener('click', () => {
-                fetch('/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ key: 'restart' })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response error' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    updateTable(data.grid_data, data.color_mapping);
-                    updateScore(data.score);
-                    updateGameOverOverlay(data.game_over);
-                    moveMade = false;  // Reset moveMade flag on restart
-                    updateUndoButton();  // Update undo button image
-                })
-                .catch((error) => console.error('Error:', error));
-            });
+        	const handleFetchPost = (elementId, action) => {
+        		const element = document.getElementById(elementId);
+        		if (element) {
+        			element.addEventListener('click', () => {
+        				fetch('/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ key: 'restart' })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response error' + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateTable(data.grid_data, data.color_mapping);
+                            updateScore(data.score);
+                            updateGameOverOverlay(data.game_over);
+                            moveMade = false;
+                            updateUndoButton();
+                        })
+                        .catch((error) => console.error('Error:', error));
+        			});
+        		}
+        	};
+
+        	handleFetchPost('restart-button', 'restart');
+        	handleFetchPost('restart-button-overlay', 'restart-overlay');
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -166,12 +166,23 @@
                 .then(data => {
                     updateTable(data.grid_data, data.color_mapping);
                     updateScore(data.score);
-                    moveMade = false;  // Reset moveMade flag after undo
-                    updateUndoButton();  // Update undo button image
+                    moveMade = false;
+                    updateUndoButton();
                 })
                 .catch((error) => console.error('Error:', error));
             });
         });
+        
+        function updateUndoButton() {
+        }
+        
+        function updateDependentWidth() {
+            const table = document.getElementById('table');
+            const tableWidth = table.offsetWidth;
+            
+            document.getElementById('app-header').style.width = `${tableWidth}px`;
+            document.getElementById('table-header').style.width = `${tableWidth}px`;
+        }
 
         function formatNumberWithCommas(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -183,6 +194,9 @@
                 updateScore(parseInt(savedScore, 10));
             }
         };
+        
+        window.onload = updateDependentWidth;
+        window.onresize = updateDependentWidth;
     </script>
 </body>
 </html>
