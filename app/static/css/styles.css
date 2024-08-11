@@ -26,10 +26,13 @@ td {
 	width: 20%;
 	height: 20%;
 }
-
 header {
     display: flex;
     flex-direction: column;
+}
+button {
+  border: none;
+  outline: none;
 }
 
 #app-header {
