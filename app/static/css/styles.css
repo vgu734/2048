@@ -2,7 +2,6 @@ body{
 	overflow: hidden;
 	background-color: #f0f0f0;
 	font-family: Arial, sans-serif;
-	font-size: 24px;
 	margin: 0;
     padding: 0;
     display: grid;
@@ -28,17 +27,45 @@ td {
 	height: 20%;
 }
 
+header {
+    display: flex;
+    flex-direction: column;
+}
+
+#app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+#table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    margin-bottom: 3px;
+}
+.title {
+	color: #3c3a32;
+	font-weight: 800;
+	font-size: 72px;
+}
+.main-buttons {
+	border: none;
+	color: #f39c12;
+	font-weight: 800;
+	font-size: 16px;
+}
+.main-buttons:hover {
+	transform: scale(1.15);
+}
+
 #container {
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100%;
-}
-#top-bar {
-    display: grid;
-    grid-template-columns: 50% 8% 0%;
-    width: 100%;
-    padding: 1rem;
-    box-sizing: border-box;
 }
 #score {
     display: flex;
@@ -53,33 +80,10 @@ td {
     text-align: center;
     border: 3px solid black;
 }
-
 #score .value {
-    font-size: 16px;
+    font-size: 26px;
 }
 
-#undo {
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-#undo img {
-    width: 65px;
-    height: 65px;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
-#undo:hover img {
-    transform: scale(1.15);
-}
-#undo.no-move img {
-    transform: scale(1);
-}
 .board {
 	display: flex;
 	justify-content: center;
@@ -114,7 +118,7 @@ td {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-#restart-button {
+#restart-button-overlay {
     position: absolute;
     top: 66%;
     left: 50%;
